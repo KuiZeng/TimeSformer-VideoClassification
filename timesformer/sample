@@ -1,0 +1,64 @@
+import av
+import torch
+import numpy as np
+
+from transformers import AutoImageProcessor, TimesformerForVideoClassification
+from huggingface_hub import hf_hub_download
+
+
+def read_video_pyav(container, indices):
+    '''
+    Decode the video with PyAV decoder.
+    Args:
+        container (`av.container.input.InputContainer`): PyAV container.
+        indices (`List[int]`): List of frame indices to decode.
+    Returns:
+        result (np.ndarray): np array of decoded frames of shape (N, H, W, C).
+    '''
+    frames = []
+    container.seek(0)
+    start_index = indices[0]
+    end_index = indices[-1]
+    for i, frame in enumerate(container.decode(video=0)):
+        if i > end_index:
+            break
+        if i >= start_index and i in indices:
+            frames.append(frame)
+    return np.stack([x.to_ndarray(format="rgb24") for x in frames])
+
+
+
+def extract_frame(len_give, nums=8, rate=2): # 给的长度，要取多少帧，抽帧频率
+    len_need = nums*rate
+    if len_need>len_give:   # 如果要的帧大于给的帧长度，rate设为1
+        rate = 1
+        len_need = nums*rate
+    if len_need>=len_give:   # 如果rate设置为1，仍然大于，直接返回
+        return list(range(len_give))
+        
+    end = random.randint(len_need, len_give)
+    start = end - len_need
+    frame_id = range(start, end, rate)
+    return list(frame_id)
+
+
+# 读取视频
+file_path = "UCF101_subset/test/BenchPress/v_BenchPress_g25_c06.avi"
+container = av.open(file_path)
+
+# 抽帧进行测试
+indices = extract_frame(len_give=container.streams.video[0].frames, nums=8, rate=3)
+video = read_video_pyav(container, indices)
+
+image_processor = AutoImageProcessor.from_pretrained("MCG-NJU/videomae-base-finetuned-kinetics")
+model = TimesformerForVideoClassification.from_pretrained("facebook/timesformer-base-finetuned-k400")
+
+inputs = image_processor(list(video), return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**inputs)
+    logits = outputs.logits
+
+# model predicts one of the 400 Kinetics-400 classes
+predicted_label = logits.argmax(-1).item()
+print(model.config.id2label[predicted_label])
