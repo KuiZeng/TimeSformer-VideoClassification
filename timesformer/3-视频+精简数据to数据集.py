@@ -1,4 +1,4 @@
-
+# 这是制作数据的代码，将原始长视频数据，依据标签进行切片，如果标注数据时已有负采样，则不需要进行getTotalSlice
 import json
 import random
 import os
