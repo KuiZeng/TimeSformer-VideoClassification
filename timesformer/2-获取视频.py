@@ -1,3 +1,6 @@
+# 这只是下载视频的代码，保存在MyData/mp4/，如果视频已在本地，移动到对应文件夹就好
+
+
 import json
 import requests
 
