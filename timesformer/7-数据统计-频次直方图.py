@@ -1,3 +1,8 @@
+# 该代码是对 测试的结果进行统计，以供分析
+# 统计的是预测对和预测错时对应的概率，并对概率进行频次统计
+
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 import json
