@@ -1,3 +1,8 @@
+# 该代码会将test下所有的视频片段都进行测试，并记录测试结果，保存在6-测试输出日志中
+
+你至少需要设置模型的checkpoint  和   需要测试的根目录   和  class_labels
+
+
 # 导入库
 import os
 import av
