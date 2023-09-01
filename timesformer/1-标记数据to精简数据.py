@@ -1,3 +1,6 @@
+# 这是一个标记数据 转 精简数据的代码，从标记数据中 仅提取 需要的数据，且只有存在标签的视频才会提取，产生一个新的json文件精简数据.json，位置在 MyData/精简数据.json
+
+
 # 标记数据很多无用的信息，提取出需要的字段，至少需要的字段，video_id(video_name),label_id,label_name,start,end
 
 
