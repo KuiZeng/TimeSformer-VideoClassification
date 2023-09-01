@@ -1,10 +1,11 @@
-# 获取标记数据，得到标记数据.json
+# 这只是获取标记数据的代码，会产生一个标记数据.json，位置在MyData/标记数据.json
+
 from xxx import DataGen  # 公司库
 import json
 
 
 host = "xxx.xxx.xxx.xxx" # 公司
-port = 8812
+port = xxxx
 data_gen = DataGen(host, port)
 
 
